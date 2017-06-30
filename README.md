@@ -24,7 +24,7 @@ The goals / steps of this project are the following:
 
 
 
-You're reading it! and here is a link to my [project code](https://github.com/mquinteiro/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
+You're reading it! and here is a link to my [project code](https://github.com/mquinteiro/CarND-Traffic-Sign-Classifier-Project/blob/master/Trafic_1.ipynb)
 
 
 I used the pandas library load and mumpy to calculate summary statistics of the traffic
