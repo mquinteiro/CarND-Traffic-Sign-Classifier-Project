@@ -21,6 +21,7 @@ The goals / steps of this project are the following:
 [image4]: ./newSigns//germanSignals.png
 [image5]: ./selectedGT.png
 [image6]: ./prediction1.png
+[image7]: ./top5.png
 
 
 
@@ -97,16 +98,16 @@ My final model consisted of the following layers:
 
 To train the model, I used an AdamOptimizer with this parameters:
 rate = 0.001
-EPOCHS = 130
+EPOCHS = 150
 BATCH_SIZE = 128
 
 Using the full training set I achieve this results:
 
 
 My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ?
-* test set accuracy of ?
+* training set accuracy of 0.997
+* validation set accuracy of 0.947
+* test set accuracy of 0.940
 
 *** Test in web Images ***
 
@@ -155,22 +156,7 @@ Here are the results of the prediction:
 The model was able to correctly guess 4 of the 12 traffic signs, which gives an accuracy of 33%. This compares favorably to the accuracy on the test set of 94.5 is very low.
 
 
-####3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
+I have check the top 5 probs of each sign, and the results could be located in
+the following  image:
 
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
-
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
-
-| Probability         	|     Prediction	        					|
-|:---------------------:|:---------------------------------------------:|
-| .60         			| Stop sign   									|
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
-
-
-For the second image ...
-
-### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
-####1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
+![top5][image7]
