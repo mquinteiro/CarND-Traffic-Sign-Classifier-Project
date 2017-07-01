@@ -15,13 +15,17 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./histo1.png "Visualization"
+[image1]: ./classDistribution.png "Visualization"
 [image2]: ./trainSample.png "Grayscaling"
 [image3]: ./transformations.png "Random Noise"
-[image4]: ./newSigns//germanSignals.png
-[image5]: ./selectedGT.png
+[image4]: ./signals2.png
 [image6]: ./prediction1.png
-[image7]: ./top5.png
+[image7]: ./ntop5.png
+[image8]: ./signals2.png
+[image9]: ./lrate1.png
+[image10]: ./lrate01.png
+[image11]: ./lrate005.png
+
 
 
 
@@ -79,7 +83,7 @@ The model that I've used is LeNet adapted to this problem.
 
 
 
-My final model consisted of the following layers:
+My first model consisted of the following layers:
 
 | Layer         		|     Description	        					|
 |:---------------------:|:---------------------------------------------:|
@@ -109,14 +113,61 @@ My final model results were:
 * validation set accuracy of 0.947
 * test set accuracy of 0.940
 
+Not bad, but... I try harder and change several thinks, intermedian inputs and
+outputs, different EPOCHS and BATCH_SIZEs and rate learning, no big differences
+founded.
+
+So I decide to test with regularization but I dind't find how to, and dropouts.
+
+With the dropouts things changed, I use a 75% of keep probability and the behavior
+is a slower training with less overfiting.
+I put a dropout in each intermediate layer. Using a keep probability of one in the
+prediction o evaluation processes
+
+Running with diferent arameters got:
+
+Rate= **0.001**
+Dropout = 0.25
+EPOCHS = 65
+Validation accuracy = 0.962
+Test accuracy = 0.931
+
+![Rate=0.001][image9]
+
+
+Rate= **0.0001**
+Dropout = 0.25
+EPOCHS = 65
+Validation accuracy = 0.962
+Test accuracy = 0.951
+
+![Rate=0.0001][image10]
+
+Rate= **0.0005**
+Dropout = 0.30
+EPOCHS = 550
+Validation accuracy = 0.950
+Test accuracy = 0.937
+Epoch scale x10
+
+![Rate=0.00005][image11]
+
+So we stay in:
+Rate= **0.0001**
+Dropout = 0.25
+EPOCHS = 65
+Validation accuracy = 0.962
+Test accuracy = 0.951
+
+
 *** Test in web Images ***
 
-To test the model outside the controled data I have download images from thew
+To test the model outside the controlled data I have download images from thew
 web.
 
 ![manipulated image][image4]
 
-Ald seleect an small group for test
+Ad seleect an small group for test
 
 ![selected signs][image5]
 
@@ -124,9 +175,10 @@ I have several difficult the first one is the way to upload to images, I get
 it in diferent formats, I've use openCV numpy but with very bad results.
 Finally I achive it using matplotlib.image package,
 
-And normaile it as the other images.
+And normalize it as the other images.
 
-In the first attemt with a reduced dataset the accuracy that I achieve is as low as , far ago from 0.9XX that I use to achieve in the dataset.
+In the first attempt with a reduced dataset the accuracy that I achieve is as low
+ as , far ago from 0.9XX that I use to achieve in the dataset.
 
 I get full accuracy in the blue ones, bot none in the yellow and red ones.
 For me it is a mistery.
@@ -139,24 +191,58 @@ Here are the results of the prediction:
 
 | Image			        |     Prediction	        					|
 |:---------------------:|:---------------------------------------------:|
-| Ahead only     		| Stop sign   									|
-| 30 km/h     			| Priority Road 										|
-| 50 km/h     			| Priority Road 										|
-| 60 km/h     			| Priority Road 										|
-| 70 km/h     			| Speed limit 60 										|
-| 80 km/h     			| Priority Road 										|
-| Go straight or right| Go straight or right|
-| 100 km/h     			| Priority Road 										|
-| Keep left| Keep left|
-| 120 km/h					| 30 km/h											|
-| Children crossing	| priority road|
-| Roundabout mandatory| Roundabout mandatory|
+|Yield|Yield|
+|Roundabout mandatory|Roundabout mandatory|
+|Stop|Stop|
+|Speed limit (50km/h)|Speed limit (50km/h)|
+|No passing|No passing|
+|Speed limit (70km/h)|Speed limit (70km/h)|
+|Turn right ahead|Turn right ahead|
+|Go straight or right|Go straight or right|
+|Priority road|Priority road|
+|Double curve|***Children crossing***|
+|Right-of-way at the next intersection|Right-of-way at the next intersection|
+|Bicycles crossing|Bicycles crossing|
 
 
-The model was able to correctly guess 4 of the 12 traffic signs, which gives an accuracy of 33%. This compares favorably to the accuracy on the test set of 94.5 is very low.
+With this new model the prediction accuracy is 91.7% that good!
+
+Also I have take a look to the different probabilities of each sing and especially to the one that was wrong prediction.
+
+Real :No passing
+No passing 0.301
+Speed limit (60km/h) 0.129
+Speed limit (20km/h) 0.074
+
+Real :Double curve
+Children crossing 0.911
+Dangerous curve to the right 0.036
+General caution 0.017
+
+But taking a closer look we can see that prediction is very good.
+
+I don't like the 5th probs quality, but look the photo I culd see that it have a ***watermark***
+
+Looking the second one I can see that is double curve, but takin a closer look to examples of it class I detect that it is another sign!!!! it is first curve to the right and the dataset the curve is to the left.
 
 
-I have check the top 5 probs of each sign, and the results could be located in
-the following  image:
+## Accuracy conclusions:
 
-![top5][image7]
+Analizing the wrong result we can see which are the worse signal classes.
+
+The following table she classes with more errors:
+
+|C| % | mistake|
+|:---------------------:|:---------------------------------------------:|
+|3|0.891| [ 5 10  5  5  5  5  5  2  5  5  5  5  2  5  5  5  5  5  5  5  2  5  5  5  5   2  7  2  5  5  5  5  5  5  2  5  5  5  5  5 28 10  5  5  2  5 10  5  2] |
+|5|0.863| [ 3  7  2 20  7  2  2  3  3  1  2  8  8  2  8  2  2 10 20  1  2  2  4  2  6  7  7  3  8  2  2  2  2  2  2  7  2  2  2  1  2  2  3  2  2  2  2  3  2  3  6  2  2  2 10  3  3  7  2  2  3  8  3  2  2  3  2  2  7  2  2 10  3 20  2 3  2  2  3  3  2  2  3  2  2  8] |
+|18|0.877| [30 27 27 20 24 27 26 28 26 28 30 26 30 30 28 26 11 28 22 20 27 30 27 27 11 28 27 27 30 11 28 27 41 30 30 26 30 27 27 27 20 30 26 28 27 28 21 21] |
+|20|0.789| [30 28 26 30 30 25 30 30 29 30 30 28 28 23 30 30 29 30 30] |
+|21|0.644| [23 23 23 23 23 23 23 23 23 23 23 23 23 23 31 23 23 28 23 23 23 23 31 23 23 23 19 23 23 23 23 23] |
+|27|0.817| [11 29 29 11 11 11 11 26 11 29 11] |
+|30|0.753| [31 29 31 29 23 11 29 21 29 23 29  8 20 20 31 29 29 29 29 20 31 29 29 11 20 31 29 20 11 11 23 29 20 11 20 31 29] |
+|42|0.800| [41  6 41 41  6 41  6  6  6 41 40  6 41 41  6 41  6 41] |
+
+All of them are very similar and the worst is the ice.
+
+I suppose that the reason could be the low resolution that makes the central picture of the sing a big black dot.
